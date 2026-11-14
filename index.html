@@ -455,16 +455,6 @@
   </div>
 </div>
 
-<!-- HANDOFF -->
-<div id="screen-handoff" class="screen">
-  <div class="handoff-title">Passou a vez!</div>
-  <div class="handoff-sub">
-    Agora é a vez de <strong id="handoff-name"></strong>!<br>
-    Passe o celular sem mostrar suas escolhas
-  </div>
-  <button class="btn" id="btn-handoff">Estou pronto(a)!</button>
-</div>
-
 <!-- RESULTS -->
 <div id="screen-results" class="screen">
   <div class="results-title">Matches!</div>
@@ -599,8 +589,7 @@ function renderCard() {
 
 function onDeckDone() {
   if (currentPerson === 1) {
-    document.getElementById('handoff-name').textContent = name2;
-    showScreen('screen-handoff');
+    showReadyScreen(2);
   } else {
     showResults();
   }
@@ -619,7 +608,6 @@ function vote(yes) {
 document.getElementById('btn-yes').addEventListener('click', () => vote(true));
 document.getElementById('btn-no' ).addEventListener('click', () => vote(false));
 
-document.getElementById('btn-handoff').addEventListener('click', () => showReadyScreen(2));
 
 // ── DRAG / SWIPE ──────────────────────────────────────
 const card = document.getElementById('main-card');
@@ -842,7 +830,7 @@ showScreen = function(id) {
   } else if (id === 'screen-results') {
     // triggered by spawnCatBurst() inside showResults()
   } else {
-    // setup, ready, or handoff
+    // setup or ready
     stopCats();
     setTimeout(() => startCats(false), 800);
   }
