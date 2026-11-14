@@ -736,6 +736,7 @@ const CAT_DATA = [{"v":"5.1.13","fr":25,"ip":0,"op":77,"w":1440,"h":2560,"nm":"a
 const CAT_W = 60;
 const lane = document.getElementById('cat-lane');
 let catSession = 0; // incremented on stop — each spawnRound checks its own session
+let lastCatIdx = -1; // ensures colors always alternate
 
 const rand = (a, b) => a + Math.random() * (b - a);
 
@@ -779,19 +780,18 @@ function runCat(x, data) {
 async function spawnRound(session) {
   if (session !== catSession) return;
   const laneW = lane.clientWidth;
-  const pick = () => CAT_DATA[Math.floor(Math.random() * CAT_DATA.length)];
+  const nextIdx = () => { lastCatIdx = (lastCatIdx + 1) % CAT_DATA.length; return lastCatIdx; };
   const wantDouble = Math.random() < 0.25 && laneW >= CAT_W * 2 + 40;
 
   if (wantDouble) {
     const half = (laneW - 16) / 2;
     const x1 = rand(8, 8 + half - CAT_W);
     const x2 = rand(8 + half, laneW - 8 - CAT_W);
-    const first = Math.floor(Math.random() * CAT_DATA.length);
-    const second = (first + 1) % CAT_DATA.length;
-    await Promise.all([runCat(x1, CAT_DATA[first]), runCat(x2, CAT_DATA[second])]);
+    const i1 = nextIdx(), i2 = nextIdx();
+    await Promise.all([runCat(x1, CAT_DATA[i1]), runCat(x2, CAT_DATA[i2])]);
   } else {
     const x = rand(8, Math.max(8, laneW - CAT_W - 8));
-    await runCat(x, pick());
+    await runCat(x, CAT_DATA[nextIdx()]);
   }
 
   if (session === catSession) {
