@@ -1,0 +1,852 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Match de Role</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f7f2ea;
+      --surface: #fffaf3;
+      --ink: #2b241d;
+      --muted: #7a6f63;
+      --accent: #b5563a;
+      --accent-soft: #e9c8b8;
+      --line: #e5dcce;
+      --yes-color: #3a9e6b;
+      --no-color: #d94f4f;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 420px;
+      padding: 32px 20px 40px;
+      min-height: 100dvh;
+      justify-content: center;
+    }
+
+    .screen.active { display: flex; }
+
+    /* ---- Cat lane (fixed bottom strip) ---- */
+    #cat-lane {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      pointer-events: none;
+      z-index: 100;
+      overflow: hidden;
+    }
+
+    /* ---- Setup ---- */
+    h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 2.4rem;
+      color: var(--accent);
+      text-align: center;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 28px;
+      font-size: 0.95rem;
+    }
+
+    .form-group { width: 100%; margin-bottom: 14px; }
+
+    label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 5px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+    }
+
+    input[type="text"]:focus { border-color: var(--accent); }
+
+    .section-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+      display: block;
+      width: 100%;
+    }
+
+    .cat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+      width: 100%;
+      margin-bottom: 22px;
+    }
+
+    .cat-pill {
+      padding: 11px 10px;
+      border: 2px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 0.84rem;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.18s;
+      line-height: 1.4;
+    }
+
+    .cat-pill.full { grid-column: 1 / -1; }
+
+    .cat-pill.on {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      font-weight: 600;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 15px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn:active { transform: scale(0.97); opacity: 0.88; }
+
+    /* ---- Swipe ---- */
+    .swipe-header { text-align: center; margin-bottom: 18px; }
+
+    .turn-name {
+      font-family: 'Fraunces', serif;
+      font-size: 1.7rem;
+      color: var(--accent);
+    }
+
+    .turn-hint { color: var(--muted); font-size: 0.88rem; margin-top: 2px; }
+
+    .prog-bar {
+      width: 100%;
+      height: 5px;
+      background: var(--line);
+      border-radius: 3px;
+      margin-bottom: 22px;
+      overflow: hidden;
+    }
+
+    .prog-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 3px;
+      transition: width 0.3s ease;
+    }
+
+    .card-area {
+      position: relative;
+      width: 100%;
+      height: 300px;
+      margin-bottom: 28px;
+    }
+
+    .card-shadow {
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      border: 2px solid var(--line);
+      background: var(--surface);
+    }
+
+    .card-shadow.s1 { transform: rotate(2.5deg) scale(0.97); opacity: 0.65; z-index: 1; }
+    .card-shadow.s2 { transform: rotate(-1.5deg) scale(0.94); opacity: 0.4; z-index: 0; }
+
+    .card {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background: var(--surface);
+      border-radius: 20px;
+      border: 2px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 20px;
+      cursor: grab;
+      user-select: none;
+      box-shadow: 0 6px 28px rgba(0,0,0,0.09);
+      will-change: transform;
+      touch-action: none;
+    }
+
+    .card.dragging { cursor: grabbing; }
+
+    .vote-label {
+      position: absolute;
+      top: 22px;
+      font-weight: 800;
+      font-size: 1.3rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      opacity: 0;
+      border: 3px solid;
+      border-radius: 8px;
+      padding: 3px 12px;
+      pointer-events: none;
+    }
+
+    .vote-label.yes {
+      color: var(--yes-color);
+      border-color: var(--yes-color);
+      right: 20px;
+      transform: rotate(-15deg);
+    }
+
+    .vote-label.no {
+      color: var(--no-color);
+      border-color: var(--no-color);
+      left: 20px;
+      transform: rotate(15deg);
+    }
+
+    .card-emoji { font-size: 4rem; margin-bottom: 14px; }
+
+    .card-name {
+      font-family: 'Fraunces', serif;
+      font-size: 1.75rem;
+      text-align: center;
+      color: var(--ink);
+    }
+
+    .card-cat {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .action-row {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+    }
+
+    .action-btn {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      border: none;
+      font-size: 1.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .action-btn:active { transform: scale(0.88); }
+
+    .btn-no  { background: #fff; color: var(--no-color);  border: 2px solid #fad8d8; }
+    .btn-yes { background: #fff; color: var(--yes-color); border: 2px solid #c8eedd; }
+
+    /* ---- Handoff ---- */
+    .handoff-title {
+      font-family: 'Fraunces', serif;
+      font-size: 1.9rem;
+      color: var(--accent);
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .handoff-sub {
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 36px;
+      font-size: 0.95rem;
+      line-height: 1.65;
+    }
+
+    /* ---- Results ---- */
+    .results-title {
+      font-family: 'Fraunces', serif;
+      font-size: 2.1rem;
+      color: var(--accent);
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    .results-sub {
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 22px;
+      font-size: 0.9rem;
+    }
+
+    .match-list {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 24px;
+      max-height: 46dvh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .match-item {
+      background: var(--surface);
+      border: 2px solid var(--accent-soft);
+      border-radius: 14px;
+      padding: 13px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      animation: pop-in 0.35s ease backwards;
+    }
+
+    .match-emoji { font-size: 1.9rem; }
+
+    .match-name {
+      font-family: 'Fraunces', serif;
+      font-size: 1.1rem;
+    }
+
+    .no-match {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.98rem;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    @keyframes pop-in {
+      0%   { transform: scale(0.6) translateY(10px); opacity: 0; }
+      70%  { transform: scale(1.05); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* pad screens so cats don't overlap content */
+    .screen { padding-bottom: 72px; }
+  </style>
+</head>
+<body>
+
+<div id="cat-lane" aria-hidden="true"></div>
+
+<!-- SETUP -->
+<div id="screen-setup" class="screen active">
+  <h1>Match de Role</h1>
+  <p class="subtitle">Descubram juntos o que fazer!</p>
+
+  <div class="form-group">
+    <label>Nome da Pessoa 1</label>
+    <input type="text" id="name1" placeholder="ex: Bruno" autocomplete="off" inputmode="text">
+  </div>
+
+  <div class="form-group">
+    <label>Nome da Pessoa 2</label>
+    <input type="text" id="name2" placeholder="ex: Camila" autocomplete="off" inputmode="text">
+  </div>
+
+  <span class="section-label">Quantas atividades?</span>
+  <div class="cat-grid" style="margin-bottom:16px">
+    <button class="cat-pill" data-count="5">5</button>
+    <button class="cat-pill on" data-count="10">10</button>
+    <button class="cat-pill" data-count="15">15</button>
+    <button class="cat-pill" data-count="all">Todas</button>
+  </div>
+
+  <span class="section-label">Categoria</span>
+  <div class="cat-grid">
+    <button class="cat-pill" data-cat="comida">🍕 Comida & Bebida</button>
+    <button class="cat-pill" data-cat="arlivre">🌿 Ao Ar Livre</button>
+    <button class="cat-pill" data-cat="cultura">🎬 Cultura</button>
+    <button class="cat-pill" data-cat="chill">🛋️ Em Casa / Chill</button>
+    <button class="cat-pill full on" data-cat="all">🎲 Tudo misturado!</button>
+  </div>
+
+  <button class="btn" id="btn-start">Começar →</button>
+</div>
+
+<!-- READY (shown before each person swipes) -->
+<div id="screen-ready" class="screen">
+  <div class="handoff-title" id="ready-title">Vez da Pessoa 1!</div>
+  <div class="handoff-sub" id="ready-sub">
+    Escolha as atividades que você toparia fazer!<br>Sem mostrar para o outro
+  </div>
+  <button class="btn" id="btn-ready">Estou pronto(a)!</button>
+</div>
+
+<!-- SWIPE -->
+<div id="screen-swipe" class="screen">
+  <div class="swipe-header">
+    <div class="turn-name" id="swipe-name">Pessoa 1</div>
+    <div class="turn-hint">Deslize ou use os botões abaixo</div>
+  </div>
+
+  <div class="prog-bar">
+    <div class="prog-fill" id="prog-fill" style="width:0%"></div>
+  </div>
+
+  <div class="card-area">
+    <div class="card-shadow s2"></div>
+    <div class="card-shadow s1"></div>
+    <div class="card" id="main-card">
+      <span class="vote-label yes" id="label-yes">❤️ Sim!</span>
+      <span class="vote-label no"  id="label-no">✗ Não</span>
+      <div class="card-emoji" id="card-emoji">🍕</div>
+      <div class="card-name"  id="card-name">Pizza</div>
+      <div class="card-cat"   id="card-cat">Comida & Bebida</div>
+    </div>
+  </div>
+
+  <div class="action-row">
+    <button class="action-btn btn-no"  id="btn-no">✕</button>
+    <button class="action-btn btn-yes" id="btn-yes">❤️</button>
+  </div>
+</div>
+
+<!-- HANDOFF -->
+<div id="screen-handoff" class="screen">
+  <div class="handoff-title">Passou a vez!</div>
+  <div class="handoff-sub">
+    Agora é a vez de <strong id="handoff-name"></strong>!<br>
+    Passe o celular sem mostrar suas escolhas
+  </div>
+  <button class="btn" id="btn-handoff">Estou pronto(a)!</button>
+</div>
+
+<!-- RESULTS -->
+<div id="screen-results" class="screen">
+  <div class="results-title">Matches!</div>
+  <div class="results-sub" id="results-sub"></div>
+  <div class="match-list" id="match-list"></div>
+  <div class="no-match" id="no-match" style="display:none">
+    Nenhum match dessa vez...<br>Talvez na próxima!
+  </div>
+  <button class="btn" id="btn-restart">Jogar de novo</button>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────
+const ACTIVITIES = {
+  comida: {
+    label: "Comida & Bebida",
+    items: [
+      { name: "Pizza",                 emoji: "🍕" },
+      { name: "Hamburguer",            emoji: "🍔" },
+      { name: "Boteco",                emoji: "🍺" },
+      { name: "Brunch",                emoji: "🥞" },
+      { name: "Sorvete",               emoji: "🍦" },
+      { name: "Comida Italiana",       emoji: "🍝" },
+      { name: "Poutine",               emoji: "🍟" },
+      { name: "Cozinhar juntos",       emoji: "👨‍🍳" },
+      { name: "Qualquer coisa lá fora!", emoji: "🌯" },
+    ]
+  },
+  arlivre: {
+    label: "Ao Ar Livre",
+    items: [
+      { name: "Caminhada",             emoji: "🥾" },
+      { name: "Piquenique",            emoji: "🧺" },
+      { name: "Andar de bike",         emoji: "🚴" },
+      { name: "Parque",                emoji: "🌳" },
+      { name: "Pôr do sol somewhere",  emoji: "🌅" },
+    ]
+  },
+  cultura: {
+    label: "Cultura & Entretenimento",
+    items: [
+      { name: "Cinema",                emoji: "🎬" },
+      { name: "Museu",                 emoji: "🏛️" },
+    ]
+  },
+  chill: {
+    label: "Em Casa / Chill",
+    items: [
+      { name: "Maratona de série",     emoji: "📺" },
+      { name: "Videogame",             emoji: "🎮" },
+      { name: "Jogos de tabuleiro",    emoji: "🎲" },
+      { name: "Assistir filme",        emoji: "🎥" },
+    ]
+  }
+};
+
+// ── STATE ─────────────────────────────────────────────
+let name1 = "Pessoa 1", name2 = "Pessoa 2";
+let deck = [], votes1 = {}, votes2 = {};
+let currentPerson = 1, currentIdx = 0;
+
+// ── SETUP ─────────────────────────────────────────────
+document.querySelectorAll('[data-count]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-count]').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+  });
+});
+
+document.querySelectorAll('[data-cat]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-cat]').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+  });
+});
+
+document.getElementById('btn-start').addEventListener('click', () => {
+  name1 = document.getElementById('name1').value.trim() || 'Pessoa 1';
+  name2 = document.getElementById('name2').value.trim() || 'Pessoa 2';
+
+  const cat = document.querySelector('[data-cat].on')?.dataset.cat || 'all';
+  const countVal = document.querySelector('[data-count].on')?.dataset.count || '10';
+
+  if (cat === 'all') {
+    deck = Object.values(ACTIVITIES).flatMap(({ label, items }) =>
+      items.map(item => ({ ...item, cat: label }))
+    );
+  } else {
+    const { label, items } = ACTIVITIES[cat];
+    deck = items.map(item => ({ ...item, cat: label }));
+  }
+
+  deck = shuffle(deck);
+  if (countVal !== 'all') {
+    deck = deck.slice(0, parseInt(countVal, 10));
+  }
+  votes1 = {}; votes2 = {};
+  showReadyScreen(1);
+});
+
+function showReadyScreen(person) {
+  currentPerson = person;
+  const pName = person === 1 ? name1 : name2;
+  document.getElementById('ready-title').textContent = `Vez de ${pName}!`;
+  showScreen('screen-ready');
+}
+
+document.getElementById('btn-ready').addEventListener('click', () => {
+  beginSwipe(currentPerson);
+});
+
+// ── SWIPE FLOW ────────────────────────────────────────
+function beginSwipe(person) {
+  currentPerson = person;
+  currentIdx = 0;
+  document.getElementById('swipe-name').textContent =
+    person === 1 ? name1 : name2;
+  showScreen('screen-swipe');
+  renderCard();
+}
+
+function renderCard() {
+  if (currentIdx >= deck.length) { onDeckDone(); return; }
+  const c = deck[currentIdx];
+  document.getElementById('card-emoji').textContent = c.emoji;
+  document.getElementById('card-name').textContent  = c.name;
+  document.getElementById('card-cat').textContent   = c.cat;
+  document.getElementById('prog-fill').style.width  =
+    (currentIdx / deck.length * 100) + '%';
+  snapCard();
+}
+
+function onDeckDone() {
+  if (currentPerson === 1) {
+    document.getElementById('handoff-name').textContent = name2;
+    showScreen('screen-handoff');
+  } else {
+    showResults();
+  }
+}
+
+function vote(yes) {
+  const key = deck[currentIdx].name;
+  if (currentPerson === 1) votes1[key] = yes;
+  else                      votes2[key] = yes;
+  flyCard(yes ? 'right' : 'left', () => {
+    currentIdx++;
+    renderCard();
+  });
+}
+
+document.getElementById('btn-yes').addEventListener('click', () => vote(true));
+document.getElementById('btn-no' ).addEventListener('click', () => vote(false));
+
+document.getElementById('btn-handoff').addEventListener('click', () => showReadyScreen(2));
+
+// ── DRAG / SWIPE ──────────────────────────────────────
+const card = document.getElementById('main-card');
+let dragStartX = 0, dragStartY = 0, dragX = 0, dragging = false;
+
+function onDragStart(x, y) {
+  dragStartX = x; dragStartY = y; dragX = 0;
+  dragging = true;
+  card.classList.add('dragging');
+}
+
+function onDragMove(x, y) {
+  if (!dragging) return;
+  dragX = x - dragStartX;
+  const dragY = (y - dragStartY) * 0.3;
+  const rot = dragX * 0.075;
+  card.style.transform = `translate(${dragX}px, ${dragY}px) rotate(${rot}deg)`;
+
+  const pct = Math.min(Math.abs(dragX) / 100, 1);
+  document.getElementById('label-yes').style.opacity = dragX > 20 ? (dragX - 20) / 80 : 0;
+  document.getElementById('label-no' ).style.opacity = dragX < -20 ? (-dragX - 20) / 80 : 0;
+}
+
+function onDragEnd() {
+  if (!dragging) return;
+  dragging = false;
+  card.classList.remove('dragging');
+  if      (dragX >  90) vote(true);
+  else if (dragX < -90) vote(false);
+  else                  snapCard();
+}
+
+// Touch
+card.addEventListener('touchstart', e => {
+  e.preventDefault();
+  onDragStart(e.touches[0].clientX, e.touches[0].clientY);
+}, { passive: false });
+card.addEventListener('touchmove', e => {
+  e.preventDefault();
+  onDragMove(e.touches[0].clientX, e.touches[0].clientY);
+}, { passive: false });
+card.addEventListener('touchend', onDragEnd);
+
+// Mouse (for desktop testing)
+card.addEventListener('mousedown', e => {
+  e.preventDefault();
+  onDragStart(e.clientX, e.clientY);
+});
+document.addEventListener('mousemove', e => onDragMove(e.clientX, e.clientY));
+document.addEventListener('mouseup',   onDragEnd);
+
+function snapCard() {
+  card.style.transition = 'transform 0.3s cubic-bezier(.25,.46,.45,.94)';
+  card.style.transform  = '';
+  document.getElementById('label-yes').style.opacity = 0;
+  document.getElementById('label-no' ).style.opacity = 0;
+  setTimeout(() => { card.style.transition = ''; }, 310);
+}
+
+function flyCard(dir, cb) {
+  const x = dir === 'right' ? window.innerWidth * 1.5 : -window.innerWidth * 1.5;
+  const rot = dir === 'right' ? 30 : -30;
+  card.style.transition = 'transform 0.38s ease-in';
+  card.style.transform  = `translateX(${x}px) rotate(${rot}deg)`;
+  document.getElementById('label-yes').style.opacity = dir === 'right' ? 1 : 0;
+  document.getElementById('label-no' ).style.opacity = dir === 'left'  ? 1 : 0;
+  setTimeout(() => {
+    card.style.transition = 'none';
+    card.style.transform  = '';
+    document.getElementById('label-yes').style.opacity = 0;
+    document.getElementById('label-no' ).style.opacity = 0;
+    void card.offsetWidth; // force reflow so transform resets before next render
+    cb();
+  }, 390);
+}
+
+// ── RESULTS ───────────────────────────────────────────
+function showResults() {
+  const matches = deck.filter(a => votes1[a.name] && votes2[a.name]);
+  const list = document.getElementById('match-list');
+  const noMatchEl = document.getElementById('no-match');
+
+  list.innerHTML = '';
+
+  if (matches.length === 0) {
+    list.style.display = 'none';
+    noMatchEl.style.display = 'block';
+    document.getElementById('results-sub').textContent = '';
+  } else {
+    list.style.display = 'flex';
+    noMatchEl.style.display = 'none';
+    document.getElementById('results-sub').textContent =
+      `${name1} & ${name2} combinaram ${matches.length} role${matches.length > 1 ? 's' : ''}!`;
+    spawnCatBurst();
+
+    matches.forEach((act, i) => {
+      const el = document.createElement('div');
+      el.className = 'match-item';
+      el.style.animationDelay = `${i * 0.07}s`;
+      el.innerHTML = `<span class="match-emoji">${act.emoji}</span>
+                      <span class="match-name">${act.name}</span>`;
+      list.appendChild(el);
+    });
+  }
+
+  showScreen('screen-results');
+}
+
+document.getElementById('btn-restart').addEventListener('click', () => {
+  stopCats();
+  showScreen('screen-setup');
+});
+
+// ── UTILS ─────────────────────────────────────────────
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function shuffle(arr) {
+  return [...arr].sort(() => Math.random() - 0.5);
+}
+
+// ── LOTTIE CATS ──────────────────────────────────────
+const CAT_DATA = [{"v":"5.1.13","fr":25,"ip":0,"op":77,"w":1440,"h":2560,"nm":"appy_present","ddd":0,"assets":[],"layers":[{"ddd":0,"ind":2,"ty":3,"nm":"Nul 1","sr":1,"ks":{"o":{"a":0,"k":0,"ix":11},"r":{"a":0,"k":0,"ix":10},"p":{"a":1,"k":[{"i":{"x":0.833,"y":0.833},"o":{"x":0.167,"y":0.167},"n":"0p833_0p833_0p167_0p167","t":11,"s":[578,3266,0],"e":[578,2556,0],"to":[0,0,0],"ti":[0,0,0]},{"t":24}],"ix":2},"a":{"a":0,"k":[0,0,0],"ix":1},"s":{"a":0,"k":[183,183,100],"ix":6}},"ao":0,"ip":11,"op":386,"st":11,"bm":0},{"ddd":0,"ind":5,"ty":4,"nm":"ojo izq Silhouettes","parent":2,"sr":1,"ks":{"o":{"a":0,"k":100,"ix":11},"r":{"a":0,"k":0,"ix":10},"p":{"a":1,"k":[{"i":{"x":0.833,"y":0.833},"o":{"x":0.167,"y":0.167},"n":"0p833_0p833_0p167_0p167","t":30,"s":[-26.17,-70.771,0],"e":[-49.121,-84.978,0],"to":[0,0,0],"ti":[0,0,0]},{"i":{"x":0.833,"y":0.833},"o":{"x":0.167,"y":0.167},"n":"0p833_0p833_0p167_0p167","t":35,"s":[-49.121,-84.978,0],"e":[-22.891,-84.978,0],"to":[0,0,0],"ti":[0,0,0]},{"i":{"x":0.833,"y":0.833},"o":{"x":0.167,"y":0.167},"n":"0p833_0p833_0p167_0p167","t":62,"s":[-22.891,-84.978,0],"e":[-26.17,-70.771,0],"to":[0,0,0],"ti":[0,0,0]},{"t":67}],"ix":2},"a":{"a":0,"k":[48.044,48.045,0],"ix":1},"s":{"a":0,"k":[100,100,100],"ix":6}},"ao":0,"shapes":[{"ty":"gr","it":[{"ind":0,"ty":"sh","ix":1,"ks":{"a":0,"k":{"i":[[0,-26.397],[-26.396,0],[0,26.396],[26.396,0]],"o":[[0,26.396],[26.396,-0.001],[0,-26.396],[-26.397,0]],"v":[[-47.794,0],[-0.001,47.794],[47.794,-0.001],[0,-47.794]],"c":true},"ix":2},"nm":"TracÃ© 1","mn":"ADBE Vector Shape - Group","hd":false},{"ty":"fl","c":{"a":0,"k":[0.128999986836,0.128999986836,0.128999986836,1],"ix":4},"o":{"a":0,"k":100,"ix":5},"r":1,"nm":"Fond 1","mn":"ADBE Vector Graphic - Fill","hd":false},{"ty":"tr","p":{"a":0,"k":[48.044,48.045],"ix":2},"a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"r":{"a":0,"k":0,"ix":6},"o":{"a":0,"k":100,"ix":7},"sk":{"a":0,"k":0,"ix":4},"sa":{"a":0,"k":0,"ix":5},"nm":"Transformer "}],"nm":"Groupe 1","np":2,"cix":2,"ix":1,"mn":"ADBE Vector Group","hd":false}],"ip":0,"op":375,"st":0,"bm":0},{"ddd":0,"ind":6,"ty":4,"nm":"ojo der Silhouettes","parent":2,"sr":1,"ks":{"o":{"a":0,"k":100,"ix":11},"r":{"a":0,"k":0,"ix":10},"p":{"a":1,"k":[{"i":{"x":0.833,"y":0.833},"o":{"x":0.167,"y":0.167},"n":"0p833_0p833_0p167_0p167","t":30,"s":[172.758,-68.586,0],"e":[166.201,-82.794,0],"to":[0,0,0],"ti":[0,0,0]},{"i":{"x":0.833,"y":0.833},"o":{"x":0.167,"y":0.167},"n":"0p833_0p833_0p167_0p167","t":35,"s":[166.201,-82.794,0],"e":[194.616,-83.887,0],"to":[0,0,0],"ti":[0,0,0]},{"i":{"x":0.833,"y":0.833},"o":{"x":0.167,"y":0.167},"n":"0p833_0p833_0p167_0p167","t":62,"s":[194.616,-83.887,0],"e":[172.758,-68.586,0],"to":[0,0,0],"ti":[0,0,0]},{"t":67}],"ix":2},"a":{"a":0,"k":[48.045,48.044,0],"ix":1},"s":{"a":0,"k":[100,100,100],"ix":6}},"ao":0,"shapes":[{"ty":"gr","it":[{"ind":0,"ty":"sh","ix":1,"ks":{"a":0,"k":{"i":[[0,-26.397],[-26.396,0],[0,26.396],[26.396,0]],"o":[[0,26.396],[26.396,-0.001],[0,-26.396],[-26.396,0]],"v":[[-47.794,0],[-0.001,47.794],[47.794,-0.001],[-0.001,-47.794]],"c":true},"ix":2},"nm":"TracÃ© 1","mn":"ADBE Vector Shape - Group","hd":false},{"ty":"fl","c":{"a":0,"k":[0.128999986836,0.128999986836,0.128999986836,1],"ix":4},"o":{"a":0,"k":100,"ix":5},"r":1,"nm":"Fond 1","mn":"ADBE Vector Graphic - Fill","hd":false},{"ty":"tr","p":{"a":0,"k":[48.045,48.045],"ix":2},"a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"r":{"a":0,"k":0,"ix":6},"o":{"a":0,"k":100,"ix":7},"sk":{"a":0,"k":0,"ix":4},"sa":{"a":0,"k":0,"ix":5},"nm":"Transformer "}],"nm":"Groupe 1","np":2,"cix":2,"ix":1,"mn":"ADBE Vector Group","hd":false}],"ip":0,"op":375,"st":0,"bm":0},{"ddd":0,"ind":7,"ty":4,"nm":"Calque 1 Silhouettes","parent":2,"sr":1,"ks":{"o":{"a":0,"k":100,"ix":11},"r":{"a":0,"k":0,"ix":10},"p":{"a":0,"k":[-0.076,109.585,0],"ix":2},"a":{"a":0,"k":[335.986,508.493,0],"ix":1},"s":{"a":0,"k":[100,100,100],"ix":6}},"ao":0,"shapes":[{"ty":"gr","it":[{"ind":0,"ty":"sh","ix":1,"ks":{"a":0,"k":{"i":[[-6.088,0],[0,-6.092],[-10.139,0],[0,10.136],[-0.003,0.101],[0,0.101],[0,0],[0,6.128],[-15.059,0],[0,-8.292],[9.56,-4.428],[0,0],[0.003,-0.1],[0,-0.101],[-10.139,0],[0,10.136],[-6.088,0],[0,-6.093],[22.296,0],[7.381,7.842],[11.591,0],[0,22.3]],"o":[[6.09,0],[0,10.137],[10.14,0],[0,-0.101],[-0.003,-0.1],[0,0],[-9.56,-4.429],[0,-8.291],[15.06,0],[0,6.128],[0,0],[0,0.101],[0.003,0.101],[0,10.136],[10.14,0],[0,-6.093],[6.089,0],[0,22.3],[-11.59,0.001],[-7.381,7.842],[-22.296,0],[0,-6.093]],"v":[[-58.824,-3.369],[-47.795,7.659],[-29.412,26.043],[-11.029,7.659],[-10.999,7.363],[-11.029,7.068],[-11.029,-13.26],[-27.266,-33.089],[0,-48.102],[27.268,-33.089],[11.03,-13.26],[11.03,7.068],[10.999,7.363],[11.03,7.659],[29.412,26.042],[47.794,7.659],[58.824,-3.37],[69.853,7.659],[29.412,48.101],[0,35.329],[-29.412,48.102],[-69.853,7.66]],"c":true},"ix":2},"nm":"TracÃ© 1","mn":"ADBE Vector Shape - Group","hd":false},{"ty":"fl","c":{"a":0,"k":[0.426999978458,0.426999978458,0.426999978458,1],"ix":4},"o":{"a":0,"k":100,"ix":5},"r":1,"nm":"Fond 1","mn":"ADBE Vector Graphic - Fill","hd":false},{"ty":"tr","p":{"a":0,"k":[407.717,410.813],"ix":2},"a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"r":{"a":0,"k":0,"ix":6},"o":{"a":0,"k":100,"ix":7},"sk":{"a":0,"k":0,"ix":4},"sa":{"a":0,"k":0,"ix":5},"nm":"Transformer "}],"nm":"Groupe 1","np":2,"cix":2,"ix":1,"mn":"ADBE Vector Group","hd":false},{"ty":"gr","it":[{"ind":0,"ty":"sh","ix":1,"ks":{"a":0,"k":{"i":[[0,-37.008],[-37.009,0.001],[0,37.008],[37.008,0]],"o":[[0,37.008],[37.007,0],[0,-37.008],[-37.008,0]],"v":[[-67.008,0],[0,67.008],[67.008,-0.001],[0,-67.009]],"c":true},"ix":2},"nm":"TracÃ© 1","mn":"ADBE Vector Shape - Group","hd":false},{"ty":"fl","c":{"a":0,"k":[1,0.823999980852,0.081999999402,1],"ix":4},"o":{"a":0,"k":100,"ix":5},"r":1,"nm":"Fond 1","mn":"ADBE Vector Graphic - Fill","hd":false},{"ty":"tr","p":{"a":0,"k":[299.261,329.23],"ix":2},"a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"r":{"a":0,"k":0,"ix":6},"o":{"a":0,"k":100,"ix":7},"sk":{"a":0,"k":0,"ix":4},"sa":{"a":0,"k":0,"ix":5},"nm":"Transformer "}],"nm":"Groupe 2","np":2,"cix":2,"ix":2,"mn":"ADBE Vector Group","hd":false},{"ty":"gr","it":[{"ind":0,"ty":"sh","ix":1,"ks":{"a":0,"k":{"i":[[0,-37.008],[-37.008,0.001],[0,37.008],[37.008,0]],"o":[[0,37.008],[37.008,0],[0,-37.008],[-37.008,0]],"v":[[-67.009,0],[0,67.008],[67.009,-0.001],[0,-67.009]],"c":true},"ix":2},"nm":"TracÃ© 1","mn":"ADBE Vector Shape - Group","hd":false},{"ty":"fl","c":{"a":0,"k":[1,0.823999980852,0.081999999402,1],"ix":4},"o":{"a":0,"k":100,"ix":5},"r":1,"nm":"Fond 1","mn":"ADBE Vector Graphic - Fill","hd":false},{"ty":"tr","p":{"a":0,"k":[516.174,329.229],"ix":2},"a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"r":{"a":0,"k":0,"ix":6},"o":{"a":0,"k":100,"ix":7},"sk":{"a":0,"k":0,"ix":4},"sa":{"a":0,"k":0,"ix":5},"nm":"Transformer "}],"nm":"Groupe 3","np":2,"cix":2,"ix":3,"mn":"ADBE Vector Group","hd":false},{"ty":"gr","it":[{"ind":0,"ty":"sh","ix":1,"ks":{"a":0,"k":{"i":[[0,0],[25.902,-23.233],[0,0],[0,0],[0,0],[0.05,-34.794],[0,0],[0.392,62.222],[31.775,0.045],[0.153,-0.002],[-0.203,-31.985],[-65.704,-8.654],[-2.494,-0.004],[-1.219,0.076],[0,0],[-22.658,50.5],[0,41.875],[0,0],[0,0],[0,0]],"o":[[0.05,-34.794],[0,0],[0,0],[0,0],[-25.836,-23.307],[0,0],[-19.955,-21.872],[-0.202,-31.831],[-0.155,0],[-31.984,0.202],[1.205,190.77],[2.539,0.336],[1.233,0.002],[0,0],[58.93,0.084],[13.454,-23.624],[0,0],[0,0],[0,0],[0,0]],"v":[[335.687,-454.416],[268.651,-484.394],[156.972,-384.219],[-1.722,-384.443],[-113.113,-484.937],[-180.235,-455.147],[-181.228,361.501],[-219.71,240.436],[-277.529,182.891],[-277.988,182.891],[-335.533,241.171],[-144.049,507.373],[-136.498,507.877],[-132.831,507.714],[181.211,508.159],[313.547,422.599],[334.642,325.355],[334.996,26.531],[334.974,26.531],[335,26.531]],"c":true},"ix":2},"nm":"TracÃ© 1","mn":"ADBE Vector Shape - Group","hd":false},{"ty":"fl","c":{"a":0,"k":[0.128999986836,0.128999986836,0.128999986836,1],"ix":4},"o":{"a":0,"k":100,"ix":5},"r":1,"nm":"Fond 1","mn":"ADBE Vector Graphic - Fill","hd":false},{"ty":"tr","p":{"a":0,"k":[335.986,508.494],"ix":2},"a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"r":{"a":0,"k":0,"ix":6},"o":{"a":0,"k":100,"ix":7},"sk":{"a":0,"k":0,"ix":4},"sa":{"a":0,"k":0,"ix":5},"nm":"Transformer "}],"nm":"Groupe 4","np":2,"cix":2,"ix":4,"mn":"ADBE Vector Group","hd":false}],"ip":0,"op":375,"st":0,"bm":0}],"markers":[]},{"nm":"appy_present","ddd":0,"h":2560,"w":1440,"meta":{"g":"@lottiefiles/toolkit-js 0.33.2"},"layers":[{"ty":3,"nm":"Nul 1","sr":1,"st":11,"op":386,"ip":11,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[0,0,0],"ix":1},"s":{"a":0,"k":[183,183,100],"ix":6},"sk":{"a":0,"k":0},"p":{"a":1,"k":[{"o":{"x":0.167,"y":0.167},"i":{"x":0.833,"y":0.833},"s":[578,3266,0],"t":11,"ti":[0,0,0],"to":[0,0,0]},{"s":[578,2556,0],"t":24}],"ix":2},"r":{"a":0,"k":0,"ix":10},"sa":{"a":0,"k":0},"o":{"a":0,"k":0,"ix":11}},"ef":[],"ind":1},{"ty":4,"nm":"ojo der Silhouettes","sr":1,"st":0,"op":375,"ip":0,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[48.045,48.044,0],"ix":1},"s":{"a":0,"k":[100,100,100],"ix":6},"sk":{"a":0,"k":0},"p":{"a":1,"k":[{"o":{"x":0.167,"y":0.167},"i":{"x":0.833,"y":0.833},"s":[172.758,-68.586,0],"t":30,"ti":[0,0,0],"to":[0,0,0]},{"o":{"x":0.167,"y":0.167},"i":{"x":0.833,"y":0.833},"s":[166.201,-82.794,0],"t":35,"ti":[0,0,0],"to":[0,0,0]},{"o":{"x":0.167,"y":0.167},"i":{"x":0.833,"y":0.833},"s":[194.616,-83.887,0],"t":62,"ti":[0,0,0],"to":[0,0,0]},{"s":[172.758,-68.586,0],"t":67}],"ix":2},"r":{"a":0,"k":0,"ix":10},"sa":{"a":0,"k":0},"o":{"a":0,"k":100,"ix":11}},"ef":[],"shapes":[{"ty":"gr","bm":0,"hd":false,"mn":"ADBE Vector Group","nm":"Groupe 1","ix":1,"cix":2,"np":2,"it":[{"ty":"sh","bm":0,"hd":false,"mn":"ADBE Vector Shape - Group","nm":"TracÃÂ© 1","ix":1,"d":1,"ks":{"a":0,"k":{"c":true,"i":[[0,-26.397],[-26.396,0],[0,26.396],[26.396,0]],"o":[[0,26.396],[26.396,-0.001],[0,-26.396],[-26.396,0]],"v":[[-47.794,0],[-0.001,47.794],[47.794,-0.001],[-0.001,-47.794]]},"ix":2}},{"ty":"fl","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Fill","nm":"Fond 1","c":{"a":0,"k":[0,0,0],"ix":4},"r":1,"o":{"a":0,"k":100,"ix":5}},{"ty":"tr","a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"sk":{"a":0,"k":0,"ix":4},"p":{"a":0,"k":[48.045,48.045],"ix":2},"r":{"a":0,"k":0,"ix":6},"sa":{"a":0,"k":0,"ix":5},"o":{"a":0,"k":100,"ix":7}}]}],"ind":2,"parent":1},{"ty":4,"nm":"ojo izq Silhouettes","sr":1,"st":0,"op":375,"ip":0,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[48.044,48.045,0],"ix":1},"s":{"a":0,"k":[100,100,100],"ix":6},"sk":{"a":0,"k":0},"p":{"a":1,"k":[{"o":{"x":0.167,"y":0.167},"i":{"x":0.833,"y":0.833},"s":[-26.17,-70.771,0],"t":30,"ti":[0,0,0],"to":[0,0,0]},{"o":{"x":0.167,"y":0.167},"i":{"x":0.833,"y":0.833},"s":[-49.121,-84.978,0],"t":35,"ti":[0,0,0],"to":[0,0,0]},{"o":{"x":0.167,"y":0.167},"i":{"x":0.833,"y":0.833},"s":[-22.891,-84.978,0],"t":62,"ti":[0,0,0],"to":[0,0,0]},{"s":[-26.17,-70.771,0],"t":67}],"ix":2},"r":{"a":0,"k":0,"ix":10},"sa":{"a":0,"k":0},"o":{"a":0,"k":100,"ix":11}},"ef":[],"shapes":[{"ty":"gr","bm":0,"hd":false,"mn":"ADBE Vector Group","nm":"Groupe 1","ix":1,"cix":2,"np":2,"it":[{"ty":"sh","bm":0,"hd":false,"mn":"ADBE Vector Shape - Group","nm":"TracÃÂ© 1","ix":1,"d":1,"ks":{"a":0,"k":{"c":true,"i":[[0,-26.397],[-26.396,0],[0,26.396],[26.396,0]],"o":[[0,26.396],[26.396,-0.001],[0,-26.396],[-26.397,0]],"v":[[-47.794,0],[-0.001,47.794],[47.794,-0.001],[0,-47.794]]},"ix":2}},{"ty":"fl","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Fill","nm":"Fond 1","c":{"a":0,"k":[0,0,0],"ix":4},"r":1,"o":{"a":0,"k":100,"ix":5}},{"ty":"tr","a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"sk":{"a":0,"k":0,"ix":4},"p":{"a":0,"k":[48.044,48.045],"ix":2},"r":{"a":0,"k":0,"ix":6},"sa":{"a":0,"k":0,"ix":5},"o":{"a":0,"k":100,"ix":7}}]}],"ind":3,"parent":1},{"ty":4,"nm":"Calque 1 Silhouettes","sr":1,"st":0,"op":375,"ip":0,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[335.986,508.493,0],"ix":1},"s":{"a":0,"k":[100,100,100],"ix":6},"sk":{"a":0,"k":0},"p":{"a":0,"k":[-0.076,109.585,0],"ix":2},"r":{"a":0,"k":0,"ix":10},"sa":{"a":0,"k":0},"o":{"a":0,"k":100,"ix":11}},"ef":[],"shapes":[{"ty":"gr","bm":0,"hd":false,"mn":"ADBE Vector Group","nm":"Groupe 1","ix":1,"cix":2,"np":2,"it":[{"ty":"sh","bm":0,"hd":false,"mn":"ADBE Vector Shape - Group","nm":"TracÃÂ© 1","ix":1,"d":1,"ks":{"a":0,"k":{"c":true,"i":[[-6.088,0],[0,-6.092],[-10.139,0],[0,10.136],[-0.003,0.101],[0,0.101],[0,0],[0,6.128],[-15.059,0],[0,-8.292],[9.56,-4.428],[0,0],[0.003,-0.1],[0,-0.101],[-10.139,0],[0,10.136],[-6.088,0],[0,-6.093],[22.296,0],[7.381,7.842],[11.591,0],[0,22.3]],"o":[[6.09,0],[0,10.137],[10.14,0],[0,-0.101],[-0.003,-0.1],[0,0],[-9.56,-4.429],[0,-8.291],[15.06,0],[0,6.128],[0,0],[0,0.101],[0.003,0.101],[0,10.136],[10.14,0],[0,-6.093],[6.089,0],[0,22.3],[-11.59,0.001],[-7.381,7.842],[-22.296,0],[0,-6.093]],"v":[[-58.824,-3.369],[-47.795,7.659],[-29.412,26.043],[-11.029,7.659],[-10.999,7.363],[-11.029,7.068],[-11.029,-13.26],[-27.266,-33.089],[0,-48.102],[27.268,-33.089],[11.03,-13.26],[11.03,7.068],[10.999,7.363],[11.03,7.659],[29.412,26.042],[47.794,7.659],[58.824,-3.37],[69.853,7.659],[29.412,48.101],[0,35.329],[-29.412,48.102],[-69.853,7.66]]},"ix":2}},{"ty":"fl","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Fill","nm":"Fond 1","c":{"a":0,"k":[0.749,0.3922,0.149],"ix":4},"r":1,"o":{"a":0,"k":100,"ix":5}},{"ty":"tr","a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"sk":{"a":0,"k":0,"ix":4},"p":{"a":0,"k":[407.717,410.813],"ix":2},"r":{"a":0,"k":0,"ix":6},"sa":{"a":0,"k":0,"ix":5},"o":{"a":0,"k":100,"ix":7}}]},{"ty":"gr","bm":0,"hd":false,"mn":"ADBE Vector Group","nm":"Groupe 2","ix":2,"cix":2,"np":2,"it":[{"ty":"sh","bm":0,"hd":false,"mn":"ADBE Vector Shape - Group","nm":"TracÃÂ© 1","ix":1,"d":1,"ks":{"a":0,"k":{"c":true,"i":[[0,-37.008],[-37.009,0.001],[0,37.008],[37.008,0]],"o":[[0,37.008],[37.007,0],[0,-37.008],[-37.008,0]],"v":[[-67.008,0],[0,67.008],[67.008,-0.001],[0,-67.009]]},"ix":2}},{"ty":"fl","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Fill","nm":"Fond 1","c":{"a":0,"k":[1,1,1],"ix":4},"r":1,"o":{"a":0,"k":100,"ix":5}},{"ty":"tr","a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"sk":{"a":0,"k":0,"ix":4},"p":{"a":0,"k":[299.261,329.23],"ix":2},"r":{"a":0,"k":0,"ix":6},"sa":{"a":0,"k":0,"ix":5},"o":{"a":0,"k":100,"ix":7}}]},{"ty":"gr","bm":0,"hd":false,"mn":"ADBE Vector Group","nm":"Groupe 3","ix":3,"cix":2,"np":2,"it":[{"ty":"sh","bm":0,"hd":false,"mn":"ADBE Vector Shape - Group","nm":"TracÃÂ© 1","ix":1,"d":1,"ks":{"a":0,"k":{"c":true,"i":[[0,-37.008],[-37.008,0.001],[0,37.008],[37.008,0]],"o":[[0,37.008],[37.008,0],[0,-37.008],[-37.008,0]],"v":[[-67.009,0],[0,67.008],[67.009,-0.001],[0,-67.009]]},"ix":2}},{"ty":"fl","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Fill","nm":"Fond 1","c":{"a":0,"k":[1,1,1],"ix":4},"r":1,"o":{"a":0,"k":100,"ix":5}},{"ty":"tr","a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"sk":{"a":0,"k":0,"ix":4},"p":{"a":0,"k":[516.174,329.229],"ix":2},"r":{"a":0,"k":0,"ix":6},"sa":{"a":0,"k":0,"ix":5},"o":{"a":0,"k":100,"ix":7}}]},{"ty":"gr","bm":0,"hd":false,"mn":"ADBE Vector Group","nm":"Groupe 4","ix":4,"cix":2,"np":2,"it":[{"ty":"sh","bm":0,"hd":false,"mn":"ADBE Vector Shape - Group","nm":"TracÃÂ© 1","ix":1,"d":1,"ks":{"a":0,"k":{"c":true,"i":[[0,0],[25.902,-23.233],[0,0],[0,0],[0,0],[0.05,-34.794],[0,0],[0.392,62.222],[31.775,0.045],[0.153,-0.002],[-0.203,-31.985],[-65.704,-8.654],[-2.494,-0.004],[-1.219,0.076],[0,0],[-22.658,50.5],[0,41.875],[0,0],[0,0],[0,0]],"o":[[0.05,-34.794],[0,0],[0,0],[0,0],[-25.836,-23.307],[0,0],[-19.955,-21.872],[-0.202,-31.831],[-0.155,0],[-31.984,0.202],[1.205,190.77],[2.539,0.336],[1.233,0.002],[0,0],[58.93,0.084],[13.454,-23.624],[0,0],[0,0],[0,0],[0,0]],"v":[[335.687,-454.416],[268.651,-484.394],[156.972,-384.219],[-1.722,-384.443],[-113.113,-484.937],[-180.235,-455.147],[-181.228,361.501],[-219.71,240.436],[-277.529,182.891],[-277.988,182.891],[-335.533,241.171],[-144.049,507.373],[-136.498,507.877],[-132.831,507.714],[181.211,508.159],[313.547,422.599],[334.642,325.355],[334.996,26.531],[334.974,26.531],[335,26.531]]},"ix":2}},{"ty":"fl","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Fill","nm":"Fond 1","c":{"a":0,"k":[0.9373,0.5569,0.2706],"ix":4},"r":1,"o":{"a":0,"k":100,"ix":5}},{"ty":"tr","a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"sk":{"a":0,"k":0,"ix":4},"p":{"a":0,"k":[335.986,508.494],"ix":2},"r":{"a":0,"k":0,"ix":6},"sa":{"a":0,"k":0,"ix":5},"o":{"a":0,"k":100,"ix":7}}]}],"ind":4,"parent":1}],"v":"5.1.13","fr":25,"op":77,"ip":0,"assets":[]}];
+const CAT_W = 60;
+const lane = document.getElementById('cat-lane');
+let catSession = 0; // incremented on stop — each spawnRound checks its own session
+
+const rand = (a, b) => a + Math.random() * (b - a);
+
+function runCat(x, data) {
+  return new Promise(resolve => {
+    const wrap = document.createElement('div');
+    Object.assign(wrap.style, {
+      position: 'absolute',
+      bottom: '0',
+      left: x + 'px',
+      width: CAT_W + 'px',
+      height: '64px',
+      pointerEvents: 'none',
+      overflow: 'hidden',
+    });
+    lane.appendChild(wrap);
+
+    const anim = lottie.loadAnimation({
+      container: wrap,
+      renderer: 'svg',
+      loop: false,
+      autoplay: true,
+      animationData: data,
+      rendererSettings: { preserveAspectRatio: 'xMidYMax meet' },
+    });
+
+    let phase = 'up';
+    anim.addEventListener('complete', () => {
+      if (phase === 'up') {
+        phase = 'down';
+        setTimeout(() => { anim.setDirection(-1); anim.play(); }, 800);
+      } else {
+        anim.destroy();
+        wrap.remove();
+        resolve();
+      }
+    });
+  });
+}
+
+async function spawnRound(session) {
+  if (session !== catSession) return;
+  const laneW = lane.clientWidth;
+  const pick = () => CAT_DATA[Math.floor(Math.random() * CAT_DATA.length)];
+  const wantDouble = Math.random() < 0.25 && laneW >= CAT_W * 2 + 40;
+
+  if (wantDouble) {
+    const half = (laneW - 16) / 2;
+    const x1 = rand(8, 8 + half - CAT_W);
+    const x2 = rand(8 + half, laneW - 8 - CAT_W);
+    const first = Math.floor(Math.random() * CAT_DATA.length);
+    const second = (first + 1) % CAT_DATA.length;
+    await Promise.all([runCat(x1, CAT_DATA[first]), runCat(x2, CAT_DATA[second])]);
+  } else {
+    const x = rand(8, Math.max(8, laneW - CAT_W - 8));
+    await runCat(x, pick());
+  }
+
+  if (session === catSession) {
+    setTimeout(() => spawnRound(session), rand(3000, 7000));
+  }
+}
+
+function startCats(burst) {
+  const s = catSession;
+  spawnRound(s);
+  if (burst) {
+    setTimeout(() => spawnRound(s), 1000);
+    setTimeout(() => spawnRound(s), 2200);
+  }
+}
+
+function stopCats() {
+  catSession++;
+  lane.innerHTML = '';
+}
+
+function spawnCatBurst() {
+  stopCats();
+  startCats(true);
+}
+
+// cats on setup screen at load
+setTimeout(() => startCats(false), 1500);
+
+// wrap showScreen to manage cats per screen
+const _showScreen = showScreen;
+showScreen = function(id) {
+  _showScreen(id);
+  if (id === 'screen-swipe') {
+    stopCats();
+  } else if (id === 'screen-results') {
+    // triggered by spawnCatBurst() inside showResults()
+  } else {
+    // setup, ready, or handoff
+    stopCats();
+    setTimeout(() => startCats(false), 800);
+  }
+};
+</script>
+</body>
+</html>
