@@ -191,7 +191,7 @@
     .card-area {
       position: relative;
       width: 100%;
-      height: 360px;
+      height: 400px;
       margin-bottom: 28px;
     }
 
@@ -413,7 +413,7 @@
     /* ---- Movie card poster ---- */
     .card-poster {
       width: 100%;
-      height: 220px;
+      height: 260px;
       object-fit: cover;
       border-radius: 12px;
       margin-bottom: 12px;
@@ -506,6 +506,17 @@
 
 <!-- SWIPE -->
 <div id="screen-swipe" class="screen">
+  <button id="btn-back" onclick="stopCats(); showScreen('screen-setup');" style="
+    align-self: flex-start;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.88rem;
+    cursor: pointer;
+    padding: 0 0 12px;
+    -webkit-tap-highlight-color: transparent;
+  ">← Voltar</button>
   <div class="swipe-header">
     <div class="turn-name" id="swipe-name">Pessoa 1</div>
     <div class="turn-hint">Deslize ou use os botões abaixo</div>
