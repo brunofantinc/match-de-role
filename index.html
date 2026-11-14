@@ -702,7 +702,7 @@ function renderCard() {
 
   if (appMode === 'movies') {
     emojiEl.style.display  = 'none';
-    posterEl.style.display = '';
+    posterEl.style.display = 'block';
     posterEl.src = c.poster ? `https://image.tmdb.org/t/p/w500${c.poster}` : '';
     document.getElementById('card-name').textContent = c.title;
     document.getElementById('card-cat').textContent  = `${c.type === 'tv' ? 'Série' : 'Filme'} · ${c.year}`;
