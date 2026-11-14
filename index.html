@@ -414,7 +414,7 @@
     <button class="cat-pill full on" data-cat="all">🎲 Tudo misturado!</button>
   </div>
 
-  <button class="btn" id="btn-start">Começar →</button>
+  <button class="btn" id="btn-start">Começar</button>
 </div>
 
 <!-- READY (shown before each person swipes) -->
@@ -463,7 +463,7 @@
   <div class="no-match" id="no-match" style="display:none">
     Nenhum match dessa vez...<br>Talvez na próxima!
   </div>
-  <button class="btn" id="btn-restart">Jogar de novo</button>
+  <button class="btn" id="btn-restart">Fazer de novo</button>
 </div>
 
 <script>
@@ -700,7 +700,7 @@ function showResults() {
     list.style.display = 'flex';
     noMatchEl.style.display = 'none';
     document.getElementById('results-sub').textContent =
-      `${name1} & ${name2} combinaram ${matches.length} role${matches.length > 1 ? 's' : ''}!`;
+      `${name1} & ${name2} estão afim de ${matches.length} role${matches.length > 1 ? 's' : ''} em comum!`;
     spawnCatBurst();
 
     matches.forEach((act, i) => {
