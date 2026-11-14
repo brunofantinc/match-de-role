@@ -1,0 +1,78 @@
+name: Update movies data
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'  # Every Monday at 6am UTC
+  workflow_dispatch:       # Manual trigger
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch trending from TMDB
+        env:
+          TMDB_TOKEN: ${{ secrets.TMDB_TOKEN }}
+        run: |
+          curl -s \
+            -H "Authorization: Bearer $TMDB_TOKEN" \
+            "https://api.themoviedb.org/3/trending/movie/week?language=pt-BR" \
+            -o /tmp/movies_raw.json
+
+          curl -s \
+            -H "Authorization: Bearer $TMDB_TOKEN" \
+            "https://api.themoviedb.org/3/trending/tv/week?language=pt-BR" \
+            -o /tmp/tv_raw.json
+
+          python3 - <<'EOF'
+          import json, datetime
+
+          with open('/tmp/movies_raw.json') as f:
+              movies_raw = json.load(f)['results'][:20]
+          with open('/tmp/tv_raw.json') as f:
+              tv_raw = json.load(f)['results'][:20]
+
+          movies = [
+              {
+                  "id": m["id"],
+                  "title": m["title"],
+                  "type": "movie",
+                  "poster": m.get("poster_path", ""),
+                  "year": m.get("release_date", "")[:4],
+                  "overview": m.get("overview", "")
+              }
+              for m in movies_raw
+          ]
+
+          tv = [
+              {
+                  "id": t["id"],
+                  "title": t["name"],
+                  "type": "tv",
+                  "poster": t.get("poster_path", ""),
+                  "year": t.get("first_air_date", "")[:4],
+                  "overview": t.get("overview", "")
+              }
+              for t in tv_raw
+          ]
+
+          output = {
+              "updated": datetime.date.today().isoformat(),
+              "movies": movies,
+              "tv": tv
+          }
+
+          with open('movies-data.json', 'w', encoding='utf-8') as f:
+              json.dump(output, f, ensure_ascii=False, indent=2)
+
+          print(f"Saved {len(movies)} movies and {len(tv)} TV shows.")
+          EOF
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add movies-data.json
+          git diff --cached --quiet || git commit -m "chore: update trending movies data"
+          git push

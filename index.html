@@ -376,6 +376,66 @@
 
     /* pad screens so cats don't overlap content */
     .screen { padding-bottom: 72px; }
+
+    /* ---- Tab bar ---- */
+    .tab-bar {
+      display: flex;
+      background: var(--surface);
+      border: 2px solid var(--line);
+      border-radius: 14px;
+      padding: 4px;
+      margin-bottom: 24px;
+      width: 100%;
+      gap: 4px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px 8px;
+      border: none;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--muted);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.84rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.18s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    /* ---- Movie card poster ---- */
+    .card-poster {
+      width: 100%;
+      height: 155px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      background: var(--line);
+      display: none;
+    }
+
+    /* ---- Movie match item ---- */
+    .match-poster {
+      width: 36px;
+      height: 54px;
+      object-fit: cover;
+      border-radius: 6px;
+      flex-shrink: 0;
+      background: var(--line);
+    }
+
+    .match-meta {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 3px;
+    }
   </style>
 </head>
 <body>
@@ -384,8 +444,13 @@
 
 <!-- SETUP -->
 <div id="screen-setup" class="screen active">
-  <h1>Match de Role</h1>
-  <p class="subtitle">Descubram juntos o que fazer!</p>
+  <div class="tab-bar">
+    <button class="tab-btn active" data-mode="roles">Role</button>
+    <button class="tab-btn" data-mode="movies">Séries & Filmes</button>
+  </div>
+
+  <h1 id="h1-title">Match de Role</h1>
+  <p class="subtitle" id="setup-subtitle">Descubram juntos o que fazer!</p>
 
   <div class="form-group">
     <label>Nome da Pessoa 1</label>
@@ -397,7 +462,7 @@
     <input type="text" id="name2" placeholder="ex: Camila" autocomplete="off" inputmode="text">
   </div>
 
-  <span class="section-label">Quantas atividades?</span>
+  <span class="section-label" id="label-count">Quantas atividades?</span>
   <div class="cat-grid" style="margin-bottom:16px">
     <button class="cat-pill" data-count="5">5</button>
     <button class="cat-pill on" data-count="10">10</button>
@@ -405,13 +470,26 @@
     <button class="cat-pill" data-count="all">Todas</button>
   </div>
 
-  <span class="section-label">Categoria</span>
-  <div class="cat-grid">
-    <button class="cat-pill" data-cat="comida">🍕 Comida & Bebida</button>
-    <button class="cat-pill" data-cat="arlivre">🌿 Ao Ar Livre</button>
-    <button class="cat-pill" data-cat="cultura">🎬 Cultura</button>
-    <button class="cat-pill" data-cat="chill">🛋️ Em Casa / Chill</button>
-    <button class="cat-pill full on" data-cat="all">🎲 Tudo misturado!</button>
+  <!-- Roles: category filter -->
+  <div id="section-activities" style="width:100%">
+    <span class="section-label">Categoria</span>
+    <div class="cat-grid">
+      <button class="cat-pill" data-cat="comida">🍕 Comida & Bebida</button>
+      <button class="cat-pill" data-cat="arlivre">🌿 Ao Ar Livre</button>
+      <button class="cat-pill" data-cat="cultura">🎬 Cultura</button>
+      <button class="cat-pill" data-cat="chill">🛋️ Em Casa / Chill</button>
+      <button class="cat-pill full on" data-cat="all">🎲 Tudo misturado!</button>
+    </div>
+  </div>
+
+  <!-- Movies: type filter -->
+  <div id="section-movies" style="display:none; width:100%">
+    <span class="section-label">Tipo</span>
+    <div class="cat-grid">
+      <button class="cat-pill" data-mtype="movies">Filmes</button>
+      <button class="cat-pill" data-mtype="tv">Séries</button>
+      <button class="cat-pill full on" data-mtype="all">Tudo misturado!</button>
+    </div>
   </div>
 
   <button class="btn" id="btn-start">Começar</button>
@@ -443,6 +521,7 @@
     <div class="card" id="main-card">
       <span class="vote-label yes" id="label-yes">❤️ Sim!</span>
       <span class="vote-label no"  id="label-no">✗ Não</span>
+      <img id="card-poster" class="card-poster" alt="">
       <div class="card-emoji" id="card-emoji">🍕</div>
       <div class="card-name"  id="card-name">Pizza</div>
       <div class="card-cat"   id="card-cat">Comida & Bebida</div>
@@ -515,6 +594,14 @@ const ACTIVITIES = {
 let name1 = "Pessoa 1", name2 = "Pessoa 2";
 let deck = [], votes1 = {}, votes2 = {};
 let currentPerson = 1, currentIdx = 0, voting = false;
+let appMode = 'roles'; // 'roles' | 'movies'
+let moviesData = null;
+
+// Load movies data (works on GitHub Pages; not needed for roles)
+fetch('./movies-data.json')
+  .then(r => r.json())
+  .then(data => { moviesData = data; })
+  .catch(() => {});
 
 // ── SETUP ─────────────────────────────────────────────
 document.querySelectorAll('[data-count]').forEach(btn => {
@@ -531,26 +618,56 @@ document.querySelectorAll('[data-cat]').forEach(btn => {
   });
 });
 
+document.querySelectorAll('[data-mtype]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-mtype]').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+  });
+});
+
+// ── TAB SWITCHING ─────────────────────────────────────
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    appMode = btn.dataset.mode;
+    const isMovies = appMode === 'movies';
+    document.getElementById('h1-title').textContent        = isMovies ? 'Match de Séries' : 'Match de Role';
+    document.getElementById('setup-subtitle').textContent  = isMovies ? 'Descubram o que assistir juntos!' : 'Descubram juntos o que fazer!';
+    document.getElementById('label-count').textContent     = isMovies ? 'Quantos títulos?' : 'Quantas atividades?';
+    document.getElementById('section-activities').style.display = isMovies ? 'none' : '';
+    document.getElementById('section-movies').style.display     = isMovies ? '' : 'none';
+  });
+});
+
 document.getElementById('btn-start').addEventListener('click', () => {
   name1 = document.getElementById('name1').value.trim() || 'Pessoa 1';
   name2 = document.getElementById('name2').value.trim() || 'Pessoa 2';
 
-  const cat = document.querySelector('[data-cat].on')?.dataset.cat || 'all';
   const countVal = document.querySelector('[data-count].on')?.dataset.count || '10';
 
-  if (cat === 'all') {
-    deck = Object.values(ACTIVITIES).flatMap(({ label, items }) =>
-      items.map(item => ({ ...item, cat: label }))
-    );
+  if (appMode === 'movies') {
+    if (!moviesData) { alert('Aguarde, carregando títulos...'); return; }
+    const mtype = document.querySelector('[data-mtype].on')?.dataset.mtype || 'all';
+    let items = [];
+    if (mtype === 'all' || mtype === 'movies') items = items.concat(moviesData.movies);
+    if (mtype === 'all' || mtype === 'tv')     items = items.concat(moviesData.tv);
+    deck = shuffle(items);
+    if (countVal !== 'all') deck = deck.slice(0, parseInt(countVal, 10));
   } else {
-    const { label, items } = ACTIVITIES[cat];
-    deck = items.map(item => ({ ...item, cat: label }));
+    const cat = document.querySelector('[data-cat].on')?.dataset.cat || 'all';
+    if (cat === 'all') {
+      deck = Object.values(ACTIVITIES).flatMap(({ label, items }) =>
+        items.map(item => ({ ...item, cat: label }))
+      );
+    } else {
+      const { label, items } = ACTIVITIES[cat];
+      deck = items.map(item => ({ ...item, cat: label }));
+    }
+    deck = shuffle(deck);
+    if (countVal !== 'all') deck = deck.slice(0, parseInt(countVal, 10));
   }
 
-  deck = shuffle(deck);
-  if (countVal !== 'all') {
-    deck = deck.slice(0, parseInt(countVal, 10));
-  }
   votes1 = {}; votes2 = {};
   showReadyScreen(1);
 });
@@ -580,11 +697,24 @@ function beginSwipe(person) {
 function renderCard() {
   if (currentIdx >= deck.length) { onDeckDone(); return; }
   const c = deck[currentIdx];
-  document.getElementById('card-emoji').textContent = c.emoji;
-  document.getElementById('card-name').textContent  = c.name;
-  document.getElementById('card-cat').textContent   = c.cat;
-  document.getElementById('prog-fill').style.width  =
-    (currentIdx / deck.length * 100) + '%';
+  const emojiEl  = document.getElementById('card-emoji');
+  const posterEl = document.getElementById('card-poster');
+
+  if (appMode === 'movies') {
+    emojiEl.style.display  = 'none';
+    posterEl.style.display = '';
+    posterEl.src = c.poster ? `https://image.tmdb.org/t/p/w500${c.poster}` : '';
+    document.getElementById('card-name').textContent = c.title;
+    document.getElementById('card-cat').textContent  = `${c.type === 'tv' ? 'Série' : 'Filme'} · ${c.year}`;
+  } else {
+    emojiEl.style.display  = '';
+    posterEl.style.display = 'none';
+    emojiEl.textContent = c.emoji;
+    document.getElementById('card-name').textContent = c.name;
+    document.getElementById('card-cat').textContent  = c.cat;
+  }
+
+  document.getElementById('prog-fill').style.width = (currentIdx / deck.length * 100) + '%';
   snapCard();
 }
 
@@ -599,7 +729,8 @@ function onDeckDone() {
 function vote(yes) {
   if (voting) return;
   voting = true;
-  const key = deck[currentIdx].name;
+  const item = deck[currentIdx];
+  const key = appMode === 'movies' ? item.id : item.name;
   if (currentPerson === 1) votes1[key] = yes;
   else                      votes2[key] = yes;
   flyCard(yes ? 'right' : 'left', () => {
@@ -690,7 +821,8 @@ function flyCard(dir, cb) {
 
 // ── RESULTS ───────────────────────────────────────────
 function showResults() {
-  const matches = deck.filter(a => votes1[a.name] && votes2[a.name]);
+  const keyFn  = c => appMode === 'movies' ? c.id : c.name;
+  const matches = deck.filter(a => votes1[keyFn(a)] && votes2[keyFn(a)]);
   const list = document.getElementById('match-list');
   const noMatchEl = document.getElementById('no-match');
 
@@ -703,18 +835,38 @@ function showResults() {
   } else {
     list.style.display = 'flex';
     noMatchEl.style.display = 'none';
-    document.getElementById('results-sub').textContent =
-      `${name1} & ${name2} estão afim de ${matches.length} role${matches.length > 1 ? 's' : ''} em comum!`;
-    spawnCatBurst();
 
-    matches.forEach((act, i) => {
-      const el = document.createElement('div');
-      el.className = 'match-item';
-      el.style.animationDelay = `${i * 0.07}s`;
-      el.innerHTML = `<span class="match-emoji">${act.emoji}</span>
-                      <span class="match-name">${act.name}</span>`;
-      list.appendChild(el);
-    });
+    if (appMode === 'movies') {
+      const n = matches.length;
+      document.getElementById('results-sub').textContent =
+        `${name1} & ${name2} estão afim de ${n} título${n > 1 ? 's' : ''} em comum!`;
+      matches.forEach((m, i) => {
+        const el = document.createElement('div');
+        el.className = 'match-item';
+        el.style.animationDelay = `${i * 0.07}s`;
+        el.innerHTML = `
+          <img class="match-poster" src="https://image.tmdb.org/t/p/w92${m.poster}" alt="${m.title}">
+          <div>
+            <div class="match-name">${m.title}</div>
+            <div class="match-meta">${m.type === 'tv' ? 'Série' : 'Filme'} · ${m.year}</div>
+          </div>`;
+        list.appendChild(el);
+      });
+    } else {
+      const n = matches.length;
+      document.getElementById('results-sub').textContent =
+        `${name1} & ${name2} estão afim de ${n} role${n > 1 ? 's' : ''} em comum!`;
+      matches.forEach((act, i) => {
+        const el = document.createElement('div');
+        el.className = 'match-item';
+        el.style.animationDelay = `${i * 0.07}s`;
+        el.innerHTML = `<span class="match-emoji">${act.emoji}</span>
+                        <span class="match-name">${act.name}</span>`;
+        list.appendChild(el);
+      });
+    }
+
+    spawnCatBurst();
   }
 
   showScreen('screen-results');
