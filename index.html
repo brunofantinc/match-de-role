@@ -514,7 +514,7 @@ const ACTIVITIES = {
 // ── STATE ─────────────────────────────────────────────
 let name1 = "Pessoa 1", name2 = "Pessoa 2";
 let deck = [], votes1 = {}, votes2 = {};
-let currentPerson = 1, currentIdx = 0;
+let currentPerson = 1, currentIdx = 0, voting = false;
 
 // ── SETUP ─────────────────────────────────────────────
 document.querySelectorAll('[data-count]').forEach(btn => {
@@ -570,6 +570,7 @@ document.getElementById('btn-ready').addEventListener('click', () => {
 function beginSwipe(person) {
   currentPerson = person;
   currentIdx = 0;
+  voting = false;
   document.getElementById('swipe-name').textContent =
     person === 1 ? name1 : name2;
   showScreen('screen-swipe');
@@ -596,11 +597,14 @@ function onDeckDone() {
 }
 
 function vote(yes) {
+  if (voting) return;
+  voting = true;
   const key = deck[currentIdx].name;
   if (currentPerson === 1) votes1[key] = yes;
   else                      votes2[key] = yes;
   flyCard(yes ? 'right' : 'left', () => {
     currentIdx++;
+    voting = false;
     renderCard();
   });
 }
