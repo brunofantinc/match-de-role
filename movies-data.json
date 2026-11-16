@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-14",
+  "updated": "2026-11-16",
   "movies": [
     {
       "id": 1368337,
@@ -10,14 +10,6 @@
       "overview": "Acompanhe o rei grego Odisseu em sua perigosa jornada de 20 anos para voltar a Ítaca após a Guerra de Troia, enfrentando monstros e deuses enquanto sua esposa Penélope resiste em seu reino."
     },
     {
-      "id": 1400837,
-      "title": "Outra Mamãe",
-      "type": "movie",
-      "poster": "/hiuBB4ZqGbL7uihdVPUahFtg7Zr.jpg",
-      "year": "2026",
-      "overview": "Uma menina de 8 anos, filha de um casal que enfrenta problemas conjugais, encara uma entidade sinistra que sai do seu armário e torna-se cada vez mais ameaçadora para a família."
-    },
-    {
       "id": 1003596,
       "title": "Vingadores: Doutor Destino",
       "type": "movie",
@@ -26,12 +18,12 @@
       "overview": "Heróis icônicos de três universos diferentes são colocados em rota de colisão mortal e enfrentam uma ameaça existencial sem precedentes, diferente de tudo que já vivenciaram antes."
     },
     {
-      "id": 1263337,
-      "title": "Coração Selvagem",
+      "id": 1400837,
+      "title": "Outra Mamãe",
       "type": "movie",
-      "poster": "/n4PJa4xVo4SjIsBvTA0yGMKjTBh.jpg",
+      "poster": "/hiuBB4ZqGbL7uihdVPUahFtg7Zr.jpg",
       "year": "2026",
-      "overview": "Um ex-soldado ferido e seu cão de guerra aposentado lutam para sobreviver na região do Alasca e encontrar o caminho de volta para casa após um acidente aéreo na mata."
+      "overview": "Uma menina de 8 anos, filha de um casal que enfrenta problemas conjugais, encara uma entidade sinistra que sai do seu armário e torna-se cada vez mais ameaçadora para a família."
     },
     {
       "id": 1423191,
@@ -42,12 +34,28 @@
       "overview": "Bryan, um tranquilo entregador de órgãos, é enviado para uma entrega noturna no Hospital Geral de Raccoon City. No caminho por uma estrada montanhosa coberta de neve, ele acidentalmente atropela uma mulher desconhecida. Ela sobrevive, mas algo está muito errado. Ao tentar ajudar, Bryan se depara com um surto em larga escala envolvendo mutações horríveis com tentáculos e monstruosidades bioengenheiradas."
     },
     {
-      "id": 1185344,
-      "title": "The Beast",
+      "id": 1300968,
+      "title": "Jogos Vorazes: Amanhecer na Colheita",
       "type": "movie",
-      "poster": "/ocg5JfJP19fodcv5uQUApkmZMdI.jpg",
+      "poster": "/ibZ6GSHtCeC7fLDJ2uyXNemgYwr.jpg",
       "year": "2026",
-      "overview": ""
+      "overview": "Revisite o mundo de Panem 24 anos antes dos eventos de Jogos Vorazes, começando na manhã da colheita dos 50º Jogos Vorazes, também conhecida como o Segundo Massacre Quaternário."
+    },
+    {
+      "id": 1567605,
+      "title": "Ebenezer e os Fantasmas do Natal",
+      "type": "movie",
+      "poster": "/7MBeM27NNcCYUszjTNYJUycPDhV.jpg",
+      "year": "2026",
+      "overview": "Ebenezer Scrooge é um velho avarento que recebe a visita do fantasma de seu antigo sócio, Jacob Marley, e dos Espíritos do Natal Passado, Presente e Futuro. Os encontros o força a confrontar o próprio passado e a lutar por uma segunda chance de ser feliz."
+    },
+    {
+      "id": 1263337,
+      "title": "Coração Selvagem",
+      "type": "movie",
+      "poster": "/n4PJa4xVo4SjIsBvTA0yGMKjTBh.jpg",
+      "year": "2026",
+      "overview": "Um ex-soldado ferido e seu cão de guerra aposentado lutam para sobreviver na região do Alasca e encontrar o caminho de volta para casa após um acidente aéreo na mata."
     },
     {
       "id": 1381071,
@@ -66,20 +74,12 @@
       "overview": "Com a memória apagada e o passado nebuloso, o ex-policial Steven Bay busca tratamento para sua amnésia enquanto trabalha em uma fazenda isolada. Em vez disso, ele se depara com crescente hostilidade, estranha vigilância e instintos que não consegue controlar completamente. Quando a pressão se torna insuportável, Bay inicia uma busca desesperada pela verdade por trás de sua realidade fragmentada."
     },
     {
-      "id": 1567605,
-      "title": "Ebenezer e os Fantasmas do Natal",
+      "id": 1185344,
+      "title": "The Beast",
       "type": "movie",
-      "poster": "/7MBeM27NNcCYUszjTNYJUycPDhV.jpg",
+      "poster": "/ocg5JfJP19fodcv5uQUApkmZMdI.jpg",
       "year": "2026",
-      "overview": "Ebenezer Scrooge é um velho avarento que recebe a visita do fantasma de seu antigo sócio, Jacob Marley, e dos Espíritos do Natal Passado, Presente e Futuro. Os encontros o força a confrontar o próprio passado e a lutar por uma segunda chance de ser feliz."
-    },
-    {
-      "id": 1300968,
-      "title": "Jogos Vorazes: Amanhecer na Colheita",
-      "type": "movie",
-      "poster": "/ibZ6GSHtCeC7fLDJ2uyXNemgYwr.jpg",
-      "year": "2026",
-      "overview": "Revisite o mundo de Panem 24 anos antes dos eventos de Jogos Vorazes, começando na manhã da colheita dos 50º Jogos Vorazes, também conhecida como o Segundo Massacre Quaternário."
+      "overview": ""
     },
     {
       "id": 969681,
@@ -122,6 +122,14 @@
       "overview": "Após ser demitido, um trabalhador e sua esposa cruzam o caminho de uma documentarista e o marido dela, encarando desejos ocultos. De Lee Chang-dong (Em Chamas)."
     },
     {
+      "id": 1050981,
+      "title": "A Arte de Ser Heumann",
+      "type": "movie",
+      "poster": "/k9uyh5Fdm2d2cdpNryVvlsnpTnM.jpg",
+      "year": "2026",
+      "overview": "Firme, exigente e cansada de ser tratada como um fardo, Judy Heumann faz de sua indignação uma revolução. Em 1977, ela e mais de 100 manifestantes pelos direitos das pessoas com deficiência enviam uma mensagem contundente: o sistema é deficiente, não nós."
+    },
+    {
       "id": 1437511,
       "title": "Como Roubar um Banco",
       "type": "movie",
@@ -130,47 +138,23 @@
       "overview": "Um grupo de assaltantes de banco habilidosos transmite seus ousados roubos ao vivo, sem perceber que sua crescente fama viral os colocou na mira de um veterano agente do FBI e de uma brilhante engenheira de software. Mesmo com a dupla se aproximando cada vez mais, a quadrilha ultrapassa todos os limites, arriscando tudo por aquilo em que acredita — e por seu assalto mais ambicioso até então."
     },
     {
-      "id": 1153576,
-      "title": "Street Fighter",
+      "id": 791523,
+      "title": "O Bosque Selvagem",
       "type": "movie",
-      "poster": "/6gWmrC2GyDbUM1ET5EBg9lxBi7S.jpg",
+      "poster": "/mcuUYNWGJHPEaRumOlgSZCzMRPc.jpg",
       "year": "2026",
-      "overview": "Em 1993, os lutadores Ryu e Ken Masters são colocados de volta no combate quando a misteriosa Chun-Li os recruta para o próximo Torneio Street Fighter: uma brutal briga de socos, destino e fúria. Entretanto, por trás desse campeonato, se esconde uma conspiração mortal que os força a encarar um ao outro e os demônios do passado. E se eles não fizerem, é game over!"
+      "overview": "A determinada adolescente Prue McKeel embarca em uma missão desesperada de resgate depois que seu irmão caçula é sequestrado por um bando de corvos. Acompanhada por seu colega de classe desajeitado, mas leal, Curtis Mehlberg, Prue navega por um mundo habitado por animais falantes, bandidos e figuras poderosas movidas pela dor e pela ambição. À medida que a dupla é arrastada para um conflito que ameaça o equilíbrio da própria floresta, Prue precisa descobrir uma força e uma crença que jamais soube que possuía."
     },
     {
-      "id": 1339713,
-      "title": "Obsessão",
+      "id": 1518204,
+      "title": "Allen",
       "type": "movie",
-      "poster": "/wUc6IDf5ChjM1UyQye21qFBeJY0.jpg",
+      "poster": "/alhhrpj1PSAn5bfz4Os1k7Bweoj.jpg",
       "year": "2026",
-      "overview": "Sem grandes pretensões, um romântico incurável compra um brinquedo que promete realizar desejos únicos. Ele quebra o artefato misterioso enquanto pede para conquistar a crush e consegue exatamente o que desejava, mas descobre que a consequência é sinistra."
-    },
-    {
-      "id": 1400940,
-      "title": "Cara-de-Barro",
-      "type": "movie",
-      "poster": "/dqvHs2YXks989ScXvsngbqAeBHX.jpg",
-      "year": "2026",
-      "overview": "A ascensão meteórica de Matt Hagen de garoto das ruas de Gotham a astro de Hollywood é tragicamente interrompida quando as ações de um chefão do crime local o deixam terrivelmente desfigurado. Abandonado por sua equipe e sem nada, Matt busca um tratamento de ponta que, milagrosamente, o devolve à sua antiga forma... mas que também afeta, de maneira inesperada, sua percepção da realidade, lançando-o em uma espiral destrutiva de obsessão e vingança."
-    },
-    {
-      "id": 1543469,
-      "title": "No Coração de Nashville",
-      "type": "movie",
-      "poster": "/rhtPUCWTsZX9aWYeOpQDgtgCqCQ.jpg",
-      "year": "2026",
-      "overview": "Misty Jones (Jessica Chastain), uma ex-estrela da música country, sai do isolamento para investigar o desaparecimento de sua sobrinha — também uma cantora country em ascensão — e precisa enfrentar seu próprio passado e o submundo sórdido de Nashville. Sua busca revela um lado obscuro da cidade, onde ninguém, nem mesmo Misty, é quem aparenta ser."
+      "overview": "Vinte anos se passaram, e Petey nunca conseguiu tirar da cabeça seu encontro extraterrestre. Até que o amigo alienígena retorna, mas por um motivo complicado e muito inesperado."
     }
   ],
   "tv": [
-    {
-      "id": 213375,
-      "title": "VisionQuest",
-      "type": "tv",
-      "poster": "/WGyAyBPncfuu8MZhLY9RtfZPM0.jpg",
-      "year": "2026",
-      "overview": "Um Visão repaginado tem se escondido daqueles que buscam usá-lo como arma. Enquanto permanece na clandestinidade, ele consulta as personalidades de IA embutidas em sua programação, incluindo o infame Ultron, para encontrar seu verdadeiro propósito. Essa vida tranquila de autorreflexão chega ao fim quando uma recompensa por sua cabeça o força a fugir ao lado de Thomas Shepard, um garoto misterioso que pode ser a reencarnação de seu filho."
-    },
     {
       "id": 84773,
       "title": "O Senhor dos Anéis: Os Anéis de Poder",
@@ -180,36 +164,12 @@
       "overview": "Tendo início em uma época de relativa paz, a série acompanha um grupo de personagens que enfrenta o ressurgimento do mal na Terra-média. Das profundezas escuras das Montanhas de Névoa, das majestosas florestas de Lindon, do belíssimo reino da ilha de Númenor, até os confins do mapa, esses reinos e personagens criarão legados que permanecerão vivos muito além de suas partidas."
     },
     {
-      "id": 254630,
-      "title": "12 12 12",
+      "id": 213375,
+      "title": "VisionQuest",
       "type": "tv",
-      "poster": "/8q6BvFQuKM1Rud4E9NQDaMGy9EL.jpg",
+      "poster": "/WGyAyBPncfuu8MZhLY9RtfZPM0.jpg",
       "year": "2026",
-      "overview": "Um roubo leva 12 meses para ser planejado, 12 horas para ser executado e um ladrão que não é capturado em até 12 dias nunca mais será. Ao longo de três linhas do tempo eletrizantes, um agente do FBI e um criminoso profissional travam um jogo mortal de gato e rato pela Europa."
-    },
-    {
-      "id": 247718,
-      "title": "Terra da Máfia",
-      "type": "tv",
-      "poster": "/jM7bH9b9QT22PtkTyHzxbXx4lDI.jpg",
-      "year": "2025",
-      "overview": "O poder está em disputa quando duas famílias do crime se chocam numa batalha que ameaça derrubar impérios e arruinar vidas. No meio está Harry Da Souza, um \"resolvedor de problemas\" que sabe bem onde a lealdade está quando as forças opostas colidem."
-    },
-    {
-      "id": 291507,
-      "title": "O Corpo",
-      "type": "tv",
-      "poster": "/iHG87S3P8409qOFtYA616BiNLPj.jpg",
-      "year": "2026",
-      "overview": "Na noite de Halloween, as garotas de um grupo de dança são tomadas por desejos profanos, visões fantasmagóricas e culpa católica depois que um ritual de iniciação dá errado."
-    },
-    {
-      "id": 259909,
-      "title": "Dexter: Ressurreição",
-      "type": "tv",
-      "poster": "/wnQ99OpwyVUxRZbfeqhNE1aab6h.jpg",
-      "year": "2025",
-      "overview": "Dexter Morgan acorda do coma e vai para Nova Iorque, determinado a encontrar Harrison e consertar as coisas, mas quando Angel Batista da Miami Metro chega com perguntas, Dexter percebe que seu passado está mais próximo do que nunca."
+      "overview": "Um Visão repaginado tem se escondido daqueles que buscam usá-lo como arma. Enquanto permanece na clandestinidade, ele consulta as personalidades de IA embutidas em sua programação, incluindo o infame Ultron, para encontrar seu verdadeiro propósito. Essa vida tranquila de autorreflexão chega ao fim quando uma recompensa por sua cabeça o força a fugir ao lado de Thomas Shepard, um garoto misterioso que pode ser a reencarnação de seu filho."
     },
     {
       "id": 1489,
@@ -220,12 +180,28 @@
       "overview": ""
     },
     {
-      "id": 307853,
-      "title": "Luz em Dias de Chuva",
+      "id": 254630,
+      "title": "12 12 12",
       "type": "tv",
-      "poster": "/ex26ZwCJmwUkIAbSf8s0TQpTegZ.jpg",
+      "poster": "/8q6BvFQuKM1Rud4E9NQDaMGy9EL.jpg",
       "year": "2026",
-      "overview": "Dois estudantes de biologia com dificuldades, inicialmente rivais por uma bolsa de estudos, encontram apoio mútuo e consolo, transformando sua relação de competição em companheirismo."
+      "overview": "Um roubo leva 12 meses para ser planejado, 12 horas para ser executado e um ladrão que não é capturado em até 12 dias nunca mais será. Ao longo de três linhas do tempo eletrizantes, um agente do FBI e um criminoso profissional travam um jogo mortal de gato e rato pela Europa."
+    },
+    {
+      "id": 291507,
+      "title": "O Corpo",
+      "type": "tv",
+      "poster": "/iHG87S3P8409qOFtYA616BiNLPj.jpg",
+      "year": "2026",
+      "overview": "Na noite de Halloween, as garotas de um grupo de dança são tomadas por desejos profanos, visões fantasmagóricas e culpa católica depois que um ritual de iniciação dá errado."
+    },
+    {
+      "id": 247718,
+      "title": "Terra da Máfia",
+      "type": "tv",
+      "poster": "/jM7bH9b9QT22PtkTyHzxbXx4lDI.jpg",
+      "year": "2025",
+      "overview": "O poder está em disputa quando duas famílias do crime se chocam numa batalha que ameaça derrubar impérios e arruinar vidas. No meio está Harry Da Souza, um \"resolvedor de problemas\" que sabe bem onde a lealdade está quando as forças opostas colidem."
     },
     {
       "id": 279246,
@@ -236,30 +212,6 @@
       "overview": "A amada imperatriz Navier governa o Império do Oriente ao lado do imperador Sovieshu. Mas, quando Sovieshu se apaixona por uma escrava fugitiva e exige o divórcio, Navier aceita sob uma única condição: receber permissão para se casar com o príncipe rival Heinrey, do Reino do Ocidente."
     },
     {
-      "id": 73223,
-      "title": "Black Clover",
-      "type": "tv",
-      "poster": "/zObHoFAX6P7DirR2dybN3cVC1Ms.jpg",
-      "year": "2017",
-      "overview": "Num mundo onde magia é tudo, Asta e Yuno são abandonados em uma igreja no mesmo dia. Enquanto Yuno possui poderes mágicos excepcionais, Asta é a única pessoa do mundo todo desprovida desse dom. Aos quinze anos, ambos recebem grimórios - livros mágicos que amplificam os poderes do detentor. Asta recebe um raro grimório de anti-magia, capaz de negar e repelir os feitiços do oponente. Dois opostos que nutrem uma rivalidade amigável, Yuno e Asta estão prontos para encarar os mais difíceis desafios para conquistar seu sonho em comum: tornar-se o Rei dos Feiticeiros. Desistir não é opção!"
-    },
-    {
-      "id": 249565,
-      "title": "The Good Daughter",
-      "type": "tv",
-      "poster": "/qJPvyo9Pxz3MQndd3tKSocLz1Nt.jpg",
-      "year": "2026",
-      "overview": "The Good Daughter acompanha duas irmãs afastadas que se reencontram após uma situação perigosa em uma escola de sua cidade natal."
-    },
-    {
-      "id": 293610,
-      "title": "Doctor X: A Máfia do Jaleco Branco",
-      "type": "tv",
-      "poster": "/xFnT1WFf4y9durKpIFiwrI0lvxq.jpg",
-      "year": "2026",
-      "overview": "Uma cirurgiã enigmática e brilhante chega a um hospital dominado pelo ego e pela corrupção. Encarando uma oposição brutal, ela resolve casos aparentemente impossíveis."
-    },
-    {
       "id": 303044,
       "title": "Campus Drivers",
       "type": "tv",
@@ -268,28 +220,20 @@
       "overview": "Loïs chega a Belrose com Max, o amor de sua vida. Lane, criador do Campus Drivers, o aplicativo mais badalado do campus, é conhecido por nunca se apegar a ninguém. O caminho dos dois jamais deveria se cruzar, mas alguns encontros mudam tudo e reabrem feridas do passado. Quando o amor surge onde menos se espera, nada mais é certo."
     },
     {
-      "id": 2190,
-      "title": "South Park",
+      "id": 259909,
+      "title": "Dexter: Ressurreição",
       "type": "tv",
-      "poster": "/ojwZ7dO7CUVUjbUDW81XaBjqy6h.jpg",
-      "year": "1997",
-      "overview": "Série animada que satiriza com muito humor negro a sociedade estadounidense ao apresentar situações bizarras e surreais protagonizadas por Stan, Kyle, Eric e Kenny, as crianças mais travessas de South Park."
+      "poster": "/wnQ99OpwyVUxRZbfeqhNE1aab6h.jpg",
+      "year": "2025",
+      "overview": "Dexter Morgan acorda do coma e vai para Nova Iorque, determinado a encontrar Harrison e consertar as coisas, mas quando Angel Batista da Miami Metro chega com perguntas, Dexter percebe que seu passado está mais próximo do que nunca."
     },
     {
-      "id": 292741,
-      "title": "Noturno",
+      "id": 73223,
+      "title": "Black Clover",
       "type": "tv",
-      "poster": "/lVoPRl5RXH2U7XJUQJnl3z0au89.jpg",
-      "year": "2026",
-      "overview": "Quando uma vítima do notório serial killer Jurek Walter reaparece viva inesperadamente, o detetive Jonah Lynn corre contra o tempo para encontrar a única pessoa que ainda está desaparecida, enquanto sua protegida, Saga Bauer, infiltra-se em segredo para obter respostas do próprio assassino."
-    },
-    {
-      "id": 153312,
-      "title": "Tulsa King",
-      "type": "tv",
-      "poster": "/y13WOeZ2rz2Ezpws0RJ0I8sQpG4.jpg",
-      "year": "2022",
-      "overview": "Depois de cumprir 25 anos de prisão, Dwight Manfredi é exilado sem cerimônia por seu chefe da máfia para se estabelecer em Oklahoma. Dwight lentamente constrói um novo império criminoso em Tulsa."
+      "poster": "/zObHoFAX6P7DirR2dybN3cVC1Ms.jpg",
+      "year": "2017",
+      "overview": "Num mundo onde magia é tudo, Asta e Yuno são abandonados em uma igreja no mesmo dia. Enquanto Yuno possui poderes mágicos excepcionais, Asta é a única pessoa do mundo todo desprovida desse dom. Aos quinze anos, ambos recebem grimórios - livros mágicos que amplificam os poderes do detentor. Asta recebe um raro grimório de anti-magia, capaz de negar e repelir os feitiços do oponente. Dois opostos que nutrem uma rivalidade amigável, Yuno e Asta estão prontos para encarar os mais difíceis desafios para conquistar seu sonho em comum: tornar-se o Rei dos Feiticeiros. Desistir não é opção!"
     },
     {
       "id": 37854,
@@ -300,6 +244,38 @@
       "overview": "Houve um homem que conquistou tudo aquilo que o mundo tinha a oferecer, o lendário Rei dos Piratas, Gold Roger. Capturado e condenado à execução pelo Governo Mundial, suas últimas palavras lançaram legiões aos mares. \"Meu tesouro? Se quiserem, podem pegá-lo. Procurem-no! Ele contém tudo que este mundo pode oferecer!\". Foi a revelação do maior tesouro, o One Piece, cobiçado por homens de todo o mundo, sonhando com fama e riqueza imensuráveis... Assim começou a Grande Era dos Piratas!"
     },
     {
+      "id": 81723,
+      "title": "A Idade Dourada",
+      "type": "tv",
+      "poster": "/9o2AsYUGahwHFrler8NGEwFBiBj.jpg",
+      "year": "2022",
+      "overview": "Após a morte do pai, a jovem Marian Brook se muda para a Nova York de 1882 - uma cidade à beira da modernidade, onde velho e novo se chocam."
+    },
+    {
+      "id": 249565,
+      "title": "The Good Daughter",
+      "type": "tv",
+      "poster": "/qJPvyo9Pxz3MQndd3tKSocLz1Nt.jpg",
+      "year": "2026",
+      "overview": "The Good Daughter acompanha duas irmãs afastadas que se reencontram após uma situação perigosa em uma escola de sua cidade natal."
+    },
+    {
+      "id": 45790,
+      "title": "JoJo's Bizarre Adventure",
+      "type": "tv",
+      "poster": "/2Sc0veFPh9CcHMtNqMyiQqIW9ZF.jpg",
+      "year": "2012",
+      "overview": "A saga que se inicia na Inglaterra do século XIX, contando a rivalidade entre Jonathan Joestar, um jovem aristocrata, e Dio Brando, um garoto plebeu que foi acolhido pelo pai de Jonathan quando tornou-se órfão. Insatisfeito com sua posição social, a ambição insaciável e o desejo de dominação de Dio o levam a estudar os poderes sobrenaturais de uma antiga máscara asteca de pedra presente na mansão dos Joestar - um artefato que mudará para sempre o destino de Dio e das futuras gerações dos Joestar."
+    },
+    {
+      "id": 293610,
+      "title": "Doctor X: A Máfia do Jaleco Branco",
+      "type": "tv",
+      "poster": "/d41TWEoIeMHI4Hwa3kkwkVvnVF5.jpg",
+      "year": "2026",
+      "overview": "Uma cirurgiã enigmática e brilhante chega a um hospital dominado pelo ego e pela corrupção. Encarando uma oposição brutal, ela resolve casos aparentemente impossíveis."
+    },
+    {
       "id": 96677,
       "title": "Lupin",
       "type": "tv",
@@ -308,20 +284,36 @@
       "overview": "Inspirado pelas aventuras de Arsène Lupin, o ladrão gentil Assane Diop quer se vingar de uma família rica por uma injustiça cometida contra o pai dele."
     },
     {
-      "id": 225385,
-      "title": "Black Doves",
-      "type": "tv",
-      "poster": "/79W18euAuGY6BnL6sPxRUoZcCIK.jpg",
-      "year": "2024",
-      "overview": "Quando descobre que mataram o amante dela, uma espiã infiltrada como esposa de um político sai em busca da verdade e de vingança com a ajuda de um amigo assassino."
-    },
-    {
       "id": 131488,
       "title": "A Imperatriz",
       "type": "tv",
       "poster": "/fOaBC66LkIwBABowOsjUEAjUeGN.jpg",
       "year": "2022",
       "overview": "Na Áustria do século XIX, a rebelde e apaixonada Sisi e o Imperador Francisco precisam defender seu amor contra ameaças, intrigas e lutas pelo poder na corte vienense."
+    },
+    {
+      "id": 292741,
+      "title": "Noturno",
+      "type": "tv",
+      "poster": "/lVoPRl5RXH2U7XJUQJnl3z0au89.jpg",
+      "year": "2026",
+      "overview": "Quando uma vítima do notório serial killer Jurek Walter reaparece viva inesperadamente, o detetive Jonah Lynn corre contra o tempo para encontrar a única pessoa que ainda está desaparecida, enquanto sua protegida, Saga Bauer, infiltra-se em segredo para obter respostas do próprio assassino."
+    },
+    {
+      "id": 95350,
+      "title": "Lanternas",
+      "type": "tv",
+      "poster": "/735vF021KbR8cg3Mlb3v4ajTGSY.jpg",
+      "year": "2026",
+      "overview": "Dois policiais intergalácticos, o recruta novato John Stewart e o lendário Lanterna Verde Hal Jordan, se veem envolvidos em um mistério sombrio que se passa na Terra enquanto investigam um assassinato no coração dos Estados Unidos."
+    },
+    {
+      "id": 307853,
+      "title": "Luz em Dias de Chuva",
+      "type": "tv",
+      "poster": "/ex26ZwCJmwUkIAbSf8s0TQpTegZ.jpg",
+      "year": "2026",
+      "overview": "Dois estudantes de biologia com dificuldades, inicialmente rivais por uma bolsa de estudos, encontram apoio mútuo e consolo, transformando sua relação de competição em companheirismo."
     }
   ]
 }
